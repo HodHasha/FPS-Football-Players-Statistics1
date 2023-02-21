@@ -105,6 +105,7 @@ namespace WindowsFormsApp7
             timer.Elapsed += Timer_Elapsed1Day;
             timer.Start();
 
+            void Timer_Elapsed1MinuteE(object sender1, System.Timers.ElapsedEventArgs e1)
             {
                 timer.Stop();
 
@@ -113,6 +114,7 @@ namespace WindowsFormsApp7
 
                 timer.Start();
             }
+            void Timer_Elapsed1Day(object sender11, System.Timers.ElapsedEventArgs e1)
             {
                 timer.Stop();
 
