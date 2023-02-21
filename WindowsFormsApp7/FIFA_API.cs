@@ -13,12 +13,11 @@ using System.Threading.Tasks;
 namespace WindowsFormsApp7
 {
 
-    public class FIFA_API
     public class FIFA_API 
     {
         Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
 
-        public string GetMatchOfTheDayYYYYY( int team_id)
+        public string GetMatchOfTheDay( int team_id)
         {
             string data = "";
 
