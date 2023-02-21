@@ -44,6 +44,8 @@ namespace WindowsFormsApp7
 
         private void button1_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Hello, Hod.");
+
 
             timer = new System.Timers.Timer();
             timer.Interval = 20000;
