@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<!-- Add your application settings here -->
+		<add key="LoggerFilePath" value="C:\\sqlite\\Logger_File.txt" />
+		<add key="DBFilePath" value="Data Source=D:\\sqlite\\Games.db" />
+	</appSettings>
+</configuration>

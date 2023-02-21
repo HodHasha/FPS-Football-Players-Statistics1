@@ -44,10 +44,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(496, 103);
+            this.textBox1.Location = new System.Drawing.Point(356, 98);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(188, 212);
+            this.textBox1.Size = new System.Drawing.Size(245, 273);
             this.textBox1.TabIndex = 1;
             // 
             // Form1
@@ -59,6 +59,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
+          //  this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

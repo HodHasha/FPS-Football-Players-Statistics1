@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Serilog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -11,89 +11,36 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using static WindowsFormsApp7.Form1;
-using Timer = System.Timers.Timer;
-
 namespace WindowsFormsApp7
 {
     public partial class Form1 : Form
     {
-        //    Logger Log = new Logger(ConfigurationManager.AppSettings["LoggerFilePath"]);
-
-        Logger Log = new Logger(ConfigurationManager.AppSettings["C:\\sqlite\\Logger_File.txt"]);
-
         private System.Timers.Timer timer;
-
+        //Logger Log = new Logger(ConfigurationManager.AppSettings["LoggerFilePath"]);
+        Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
+        FIFA_API Fifa = new FIFA_API();
 
         public Form1()
         {
-            InitializeComponent(); InitializeComponent();
-
+            InitializeComponent();
         }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            timer = new System.Timers.Timer();
-            timer.Interval = 20000;
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
-            void Timer_Elapsed(object sender1, System.Timers.ElapsedEventArgs e1)
-            {
-                timer.Stop();
-
-                Thread t = new Thread(SendAPI);
-                t.Start();
-
-
-                timer.Start();
-            }
-
-
-
-
-
-
-            void SendAPI()
-            {
-                using (WebClient client = new WebClient())
-                {
-                    try
-                    {
-                        string data = client.DownloadString("http://livescore-api.com/api-client/scores/live.json?key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8");
-
-                        StreamWriter writer = new StreamWriter("D:\\Matches\\play.Json");
-                        writer.Write(data);
-                        writer.Close();
-                    }
-                    catch (WebException ex)
-                    {
-                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
-                    }
-                }
-            }
-
-
-
             try
+
             {
-                string loggerFilePath = ConfigurationManager.AppSettings["LoggerFilePath"];
-
-
-
-
-
                 var watcher = new FileSystemWatcher("D:\\Matches");
 
                 watcher.NotifyFilter = NotifyFilters.Attributes
@@ -113,8 +60,6 @@ namespace WindowsFormsApp7
                 watcher.Filter = "*.Json";
                 watcher.IncludeSubdirectories = true;
                 watcher.EnableRaisingEvents = true;
-
-
             }
             catch (Exception ex)
 
@@ -141,20 +86,149 @@ namespace WindowsFormsApp7
                 return;
 
             }
+            string FutureGamesPathRMA = "D:\\Matches\\FutureGamesRMA.Json";
+            string FutureGamesPathManCity = "D:\\Matches\\FutureGamesMANCITY.Json";
+            string FutureGamesPathPSG = "D:\\Matches\\FutureGamesPSG.Json";
+            string LiveScoresPath = "D:\\Matches\\play.Json";
+            string EventsPath = "D:\\Matches\\Event.Json";
+            timer = new System.Timers.Timer();
+            timer.Interval = 60000;
+            timer.Elapsed += Timer_Elapsed1Minute;
+            timer.Start();
+
+            timer = new System.Timers.Timer
+            {
+               Interval = 86400000
+              //Interval = 60000
+
+            };
+            timer.Elapsed += Timer_Elapsed1Day;
+            timer.Start();
+
+            void Timer_Elapsed1Minute(object sender1, System.Timers.ElapsedEventArgs e1)
+            {
+                timer.Stop();
+
+                Fifa.GetLiveScore(27,1581068);
 
 
+                timer.Start();
+            }
+            void Timer_Elapsed1Day(object sender1, System.Timers.ElapsedEventArgs e1)
+            {
+                timer.Stop();
+
+                Fifa.GetMatchOfTheDay(27);
 
 
+                timer.Start();
+            }
+
+
+            void LiveScores()
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        string data = client.DownloadString("https://livescore-api.com/api-client/scores/live.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&fixture_id=1538532");
+
+                         StreamWriter writer = new StreamWriter(LiveScoresPath);
+                         writer.Write(data);
+                        writer.Close();
+                       // Log.LoggerWriteLine(data);
+
+                    }
+                    catch (WebException ex)
+                    {
+                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                    }
+                }
+            }
+            void FutureGamesRMA()
+            {
+
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        string data = client.DownloadString("https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&competition_id=3&date=2023-02-18&team=27");
+
+                        StreamWriter writer = new StreamWriter(FutureGamesPathRMA);
+                        writer.Write(data);
+                        writer.Close();
+                    }
+                    catch (WebException ex)
+                    {
+                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                    }
+                }
+
+            }
+            void FutureGamesManCity()
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        string data = client.DownloadString("https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&competition_id=3&date=today&team=???");
+
+                        StreamWriter writer = new StreamWriter(FutureGamesPathManCity);
+                        writer.Write(data);
+                        writer.Close();
+                    }
+                    catch (WebException ex)
+                    {
+                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                    }
+                }
+            }
+            void FutureGamesPSG()
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        string data = client.DownloadString("https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&competition_id=3&date=today&team=???");
+
+                        StreamWriter writer = new StreamWriter(FutureGamesPathPSG);
+                        writer.Write(data);
+                        writer.Close();
+                    }    
+                    catch (WebException ex)
+                    {
+                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                    }
+                }
+            }
+            void Events()
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        string data = client.DownloadString("https://livescore-api.com/api-client/scores/events.json?key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&id=397324");
+                        StreamWriter writer = new StreamWriter(EventsPath);
+                        writer.Write(data);
+                         writer.Close();
+                        //Log.LoggerWriteLine(data);
+
+                    }
+                    catch (WebException ex)
+                    {
+                        Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                    }
+                }
+            }
 
         }
-
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
             try
             {
-                //  string DataBaseFilePath = ConfigurationManager.AppSettings["DBFilePath"];
-                // SQLiteConnection sqlite_conn = new SQLiteConnection(DataBaseFilePath);
-                SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
+                // string DataBaseFilePath = ConfigurationManager.AppSettings["DBFilePath"];
+                //SQLiteConnection sqlite_conn = new SQLiteConnection(DataBaseFilePath);
+                SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db"); 
                 try
                 {
                     sqlite_conn.Open();
@@ -167,7 +241,6 @@ namespace WindowsFormsApp7
                     File.Delete(e.FullPath);
                     return;
                 }
-
 
                 string value = $"Created: {e.FullPath}";
                 var Matches = new List<match>();
@@ -197,10 +270,6 @@ namespace WindowsFormsApp7
 
                             {
 
-
-                                // Create a new database connection:
-                                // sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
-                                // Open the connection:
 
                                 SQLiteCommand sqlite_cmd;
                                 sqlite_cmd = sqlite_conn.CreateCommand();
@@ -239,11 +308,7 @@ namespace WindowsFormsApp7
                             {
 
 
-                                //  SQLiteConnection sqlite_conn;
-                                // Create a new database connection:
-                                // sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
-                                // Open the connection:
-
+                        
                                 SQLiteCommand sqlite_cmd;
                                 sqlite_cmd = sqlite_conn.CreateCommand();
                                 //  sqlite_cmd.CommandText = "INSERT INTO Games (id, home_name, away_name, score,time,league_id,status)";
@@ -297,10 +362,6 @@ namespace WindowsFormsApp7
                             {
 
 
-                                //  SQLiteConnection sqlite_conn;
-                                // Create a new database connection:
-                                //  sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
-                                // Open the connection:
 
 
                                 SQLiteCommand sqlite_cmd;
@@ -332,117 +393,109 @@ namespace WindowsFormsApp7
 
 
                 Log.LoggerWriteLine($"ERROR ONCREATE " + ex.Message);
+
                 File.Delete(e.FullPath);
-
-
 
 
                 return;
 
             }
-
         }
-
     }
-}
 
-
-
-
-public class Logger
-
-{
-
-
-
-    public Logger(string path)
+    /*
+    public class Logger
 
     {
 
+
+        public Logger(string path)
 
         {
 
 
+            {
+
+
+
+            }
+
+
 
         }
 
+        public void LoggerWriteLine(string createText)
 
+        { 
+            //    string loggerFilePath = ConfigurationManager.AppSettings["LoggerFilePath"];
+            // string filePath = ConfigurationManager.AppSettings["LoggerFilePath"];
+            string filePath = @"C:\sqlite\Logger_File.txt";
+
+            File.AppendAllLines(filePath, new[] { createText });
+
+
+            return;
+
+        }
 
     }
+    */
 
-    public void LoggerWriteLine(string createText)
+
+
+
+
+
+
+
+
+
+
+    public class match
+    {
+        public string id { get; set; }
+        public string home_name { get; set; }
+        public string away_name { get; set; }
+        public string score { get; set; }
+        public string time { get; set; }
+        public string league_id { get; set; }
+        public string status { get; set; }
+    }
+
+    public class Event
 
     {
 
-       //  string loggerFilePath = ConfigurationManager.AppSettings["LoggerFilePath"];
-        //  string filePath = ConfigurationManager.AppSettings["LoggerFilePath"];
+        public string id { get; set; }
 
-       string filePath = @"C:\sqlite\Logger_File.txt";
+        public string match_id { get; set; }
+        public string player { get; set; }
+        public string time { get; set; }
+        public string event1 { get; set; }
+        public string sort { get; set; }
+        public string home_away { get; set; }
 
 
 
-        File.AppendAllLines(filePath, new[] { createText });
+    }
+    public class futureGames
+    {
+        public string name { get; set; }
+        public int id { get; set; }
+        public int home_id { get; set; }
+        public string home_name { get; set; }
+        public int id2 { get; set; }
+        public string location { get; set; }
+        public int group_id { get; set; }
+        public string date { get; set; }
+        public int away_id { get; set; }
+        public int league_id { get; set; }
+        public int competition_id { get; set; }
+        public string time { get; set; }
+        public string away_name { get; set; }
 
 
-        return;
+
 
     }
 }
-
-
-
-
-
-
-
-
-
-public class match
-{
-    public string id { get; set; }
-    public string home_name { get; set; }
-    public string away_name { get; set; }
-    public string score { get; set; }
-    public string time { get; set; }
-    public string league_id { get; set; }
-    public string status { get; set; }
-}
-
-public class Event
-
-{
-
-    public string id { get; set; }
-
-    public string match_id { get; set; }
-    public string player { get; set; }
-    public string time { get; set; }
-    public string event1 { get; set; }
-    public string sort { get; set; }
-    public string home_away { get; set; }
-
-
-
-}
-public class futureGames
-{
-    public string name { get; set; }
-    public int id { get; set; }
-    public int home_id { get; set; }
-    public string home_name { get; set; }
-    public int id2 { get; set; }
-    public string location { get; set; }
-    public int group_id { get; set; }
-    public string date { get; set; }
-    public int away_id { get; set; }
-    public int league_id { get; set; }
-    public int competition_id { get; set; }
-    public string time { get; set; }
-    public string away_name { get; set; }
-
-
-
-
-}
-
-
