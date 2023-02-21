@@ -38,6 +38,7 @@ namespace WindowsFormsApp7
 
         private void button1_Click(object sender, EventArgs e)
         {
+           // HELLOO
             try
 
             {
@@ -105,7 +106,7 @@ namespace WindowsFormsApp7
             timer.Elapsed += Timer_Elapsed1Day;
             timer.Start();
 
-            void Timer_Elapsed1MinuteE(object sender1, System.Timers.ElapsedEventArgs e1)
+            void Timer_Elapsed1Minute(object sender1, System.Timers.ElapsedEventArgs e1)
             {
                 timer.Stop();
 
@@ -114,7 +115,7 @@ namespace WindowsFormsApp7
 
                 timer.Start();
             }
-            void Timer_Elapsed1Day(object sender11, System.Timers.ElapsedEventArgs e1)
+            void Timer_Elapsed1Day(object sender1, System.Timers.ElapsedEventArgs e1)
             {
                 timer.Stop();
 
