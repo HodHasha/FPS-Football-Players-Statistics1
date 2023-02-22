@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -13,24 +14,27 @@ namespace WindowsFormsApp7
 
         public Logger(string path)
         {
-            using (FileStream fs = File.Create("C:\\Yaniv\\Logger_File.txt"))
-            {
-
-            }
-
+  
         }
         public void LoggerWriteLine(string createText)
 
         {
-            string filePath = ConfigurationManager.AppSettings["LoggerFilePath"];
+            try
+            {
+                string filePath = ("C:\\sqlite\\Logger_File.txt");
 
-            File.AppendAllLines(filePath, new[] { createText });
+                File.AppendAllLines(filePath, new[] { createText });
 
 
-            return;
+                return;
+            }
+            catch (Exception ex)
+            {
 
+                LoggerWriteLine("LOGGER ERROR" + ex.Message);
+            }
         }
-
+            
     }
 }
 
