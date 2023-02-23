@@ -45,8 +45,8 @@ namespace WindowsFormsApp7
 
             timer = new System.Timers.Timer
             {
-          Interval = 86400000
-           // Interval = 30000
+            //    Interval = 86400000
+               Interval = 30000
 
             };
             timer.Elapsed += Timer_Elapsed1Day;
@@ -65,10 +65,22 @@ namespace WindowsFormsApp7
             {
                 timer.Stop();
 
-                Fifa.GetMatchOfTheDay(27);
+                if (cbRMA.Checked == true)
+                {
+                    Fifa.GetMatchOfTheDay(27);
+                }
 
 
-                timer.Start();
+                if (cbManCity.Checked == true)
+                {
+                    Fifa.GetMatchOfTheDay(12);
+                }
+               
+                    if (cbPSG.Checked == true)
+                    {
+                        Fifa.GetMatchOfTheDay(59);
+                    }
+                    timer.Start();
             }
 
         }
