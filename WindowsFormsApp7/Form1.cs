@@ -30,7 +30,7 @@ namespace WindowsFormsApp7
         //Logger Log = new Logger(ConfigurationManager.AppSettings["LoggerFilePath"]);
         Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
         FIFA_API Fifa = new FIFA_API();
-
+        //Yaniv
         public Form1()
         {
             InitializeComponent();
