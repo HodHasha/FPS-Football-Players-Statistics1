@@ -55,7 +55,6 @@ namespace WindowsFormsApp7
                         catch (Exception ex)
                         {
                             Log.LoggerWriteLine($"ERROR no connection to DB " + ex.Message);
-                            return "ERROR";
                         }
 
 
@@ -113,8 +112,9 @@ namespace WindowsFormsApp7
                 try
                 {
                     string Query = "https://livescore-api.com/api-client/scores/live.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8";
-                    Query += "&team=&fixture_id=";
+                    Query += "&team=";
                     Query += team_id;
+                    Query += "&fixture_id=";
                     Query += fixture_id;
 
 
@@ -170,12 +170,71 @@ namespace WindowsFormsApp7
                 }
 
             }
-            return "";
+            return data;
         }
 
-        public string GetEvents(string Game_Path)
+        public string GetEvents(int match_id)
         {
-            return "";
+            var Events = new List<Event>();
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=C:\\sqlite\\db\\Games.db");
+            string data = "";
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+
+                    string Query = "https://livescore-api.com/api-client/scores/events.json?id=129180&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&id=";
+                    Query += match_id;
+                    data = client.DownloadString(Query);
+                    Events = JsonSerializer.Deserialize<List<Event>>(data);
+
+                    if (Events != null && Events.Count > 0)
+
+                    {
+                        try
+                        {
+                            sqlite_conn.Open();
+                            Log.LoggerWriteLine(" db open ");
+                            if (sqlite_conn == null)
+                            {
+                                Log.LoggerWriteLine($"ERROR no connection to DB ");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.LoggerWriteLine($"ERROR no connection to DB " + ex.Message);
+                        }
+                        foreach (var score1 in Events)
+
+                        {
+
+
+
+
+                            SQLiteCommand sqlite_cmd;
+                            sqlite_cmd = sqlite_conn.CreateCommand();
+                            //  sqlite_cmd.CommandText = "INSERT INTO Games (id, home_name, away_name, score,time,league_id,status)";
+                            sqlite_cmd.CommandText = "INSERT INTO Players (id, match_id, player, time,event1, sort,home_away) " +
+                                " VALUES(@id,@match_id,@player,@time,@event1,@sort,@home_away)";
+                            sqlite_cmd.Parameters.AddWithValue("@id", score1.id);
+                            sqlite_cmd.Parameters.AddWithValue("@match_id", score1.match_id);
+                            sqlite_cmd.Parameters.AddWithValue("@player", score1.player);
+                            sqlite_cmd.Parameters.AddWithValue("@time", score1.time);
+                            sqlite_cmd.Parameters.AddWithValue("@event1", score1.event1);
+                            sqlite_cmd.Parameters.AddWithValue("@sort", score1.sort);
+                            sqlite_cmd.Parameters.AddWithValue("@home_away", score1.home_away);
+                            sqlite_cmd.ExecuteNonQuery();
+
+                        }
+                    }
+                }
+                
+                catch (Exception ex)
+                {
+                    Log.LoggerWriteLine("Web client Error: " + ex.Message);
+                }
+            }
+            return data;
         }
     }
 }
