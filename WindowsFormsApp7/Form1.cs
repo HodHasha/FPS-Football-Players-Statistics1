@@ -46,7 +46,7 @@ namespace WindowsFormsApp7
             timer = new System.Timers.Timer
             {
             //    Interval = 86400000
-               Interval = 30000
+               Interval = 5000
 
             };
             timer.Elapsed += Timer_Elapsed1Day;

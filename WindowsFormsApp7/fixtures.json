@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "data": {
+    "fixtures": [
+      {
+        "time": "",
+        "location": "",
+        "competition_id": 334,
+        "away_translations": {
+          "th": "à¸šà¸²à¸£à¹Œà¹€à¸‹à¹‚à¸¥à¸™à¹ˆà¸²",
+          "ru": "Ð‘Ð°Ñ€ÑÐµÐ»Ð¾Ð½Ð°",
+          "fa": "Ø¨Ø§Ø±Ø³Ù„ÙˆÙ†Ø§",
+          "ar": "Ø¨Ø±Ø´Ù„ÙˆÙ†Ø©"
+        },
+        "odds": {
+          "pre": {
+            "1": 2.38,
+            "2": 2.9,
+            "X": 3.4
+          },
+          "live": {
+            "1": null,
+            "2": null,
+            "X": null
+          }
+        },
+        "away_name": "Barcelona",
+        "away_id": 21,
+        "league_id": 0,
+        "group_id": 0,
+        "date": "2023-03-02",
+        "league": {
+          "country_id": null,
+          "name": null,
+          "id": null
+        },
+        "competition": {
+          "name": "Copa del Rey",
+          "id": 334
+        },
+        "round": "SF",
+        "home_translations": {
+          "th": "à¹€à¸£à¸­à¸±à¸¥à¸¡à¸²à¸”à¸£à¸´à¸”",
+          "ru": "Ð ÐµÐ°Ð» ÐœÐ°Ð´Ñ€Ð¸Ð´",
+          "fa": "Ø±Ø¦Ø§Ù„ Ù…Ø§Ø¯Ø±ÛŒØ¯",
+          "ar": "Ø±ÙŠØ§Ù„ Ù…Ø¯Ø±ÙŠØ¯"
+        },
+        "home_id": 27,
+        "home_name": "Real Madrid",
+        "id": 1588708,
+        "h2h": "https://livescore-api.com/api-client/teams/head2head.json?key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&team1_id=27&team2_id=21"
+      }
+    ],
+    "next_page": false,
+    "prev_page": false
+  }
+}
+/*{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "JSON Schema for fixtures JSON file format",
+
+  "type": "object",
+
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "This shows up in tooltips for the 'name' property."
+    },
+    "versions": {
+      "type": "array",
+      "description": "An array of version numbers.",
+      "minItems": 1,
+      "items": {
+        "type": "number"
+      }
+    }
+  }
+}*/

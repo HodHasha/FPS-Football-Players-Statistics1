@@ -33,12 +33,35 @@ namespace WindowsFormsApp7
                 {
                     string Query = "https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8";
 
-                    Query += "&date=today&team=";
+                    Query += "&date=2023-03-02&team=";
                     Query += team_id;
 
                     data = client.DownloadString(Query);
 
-                    FutureGames = JsonSerializer.Deserialize<List<futureGames>>(data);
+                    Log.LoggerWriteLine(data);
+                    ///////////////////////////////////////////////////////////////////////////////////////
+                    bool TimeExist = data.Contains("time");
+                    if(TimeExist == true)
+                    {
+                        int location = data.IndexOf("time");
+                        string TimeOfEvent = data.Substring(location + 7, 8);
+
+                        
+                        int location1 = data.IndexOf("home_name");
+                        int locationOfQoute = data.IndexOf("\"", location1+15);
+                        string HTeamOfEvent = data.Substring(location1 + 12, locationOfQoute - (location1 + 12));
+
+                        int location2 = data.IndexOf("id",location1);
+                        string IDOfEvent = data.Substring(location2 + 9, 7);
+
+                        int location3 = data.IndexOf("away_name");
+                        int locationOfQoute1 = data.IndexOf("\"", location3 + 13);
+                        string ATeamOfEvent = data.Substring(location3 + 12, locationOfQoute - (location3 + 12));
+                    }
+                    ///////////////////////////////////////////////////////////////////////////////////////////////
+                    ///
+
+                   // FutureGames = JsonSerializer.Deserialize<List<futureGames>>(data);
 
                     if (FutureGames != null && FutureGames.Count > 0)
                     {
