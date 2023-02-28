@@ -56,15 +56,13 @@ namespace WindowsFormsApp7
 
                         int location3 = data.IndexOf("away_name");
                         int locationOfQoute1 = data.IndexOf("\"", location3 + 13);
-                        string ATeamOfEvent = data.Substring(location3 + 12, locationOfQoute - (location3 + 12));
-                    }
+                        string ATeamOfEvent = data.Substring(location3 + 12, locationOfQoute1 - (location3 + 12));
+                    
                     ///////////////////////////////////////////////////////////////////////////////////////////////
                     ///
+                    // FutureGames = JsonSerializer.Deserialize<List<futureGames>>(data);
 
-                   // FutureGames = JsonSerializer.Deserialize<List<futureGames>>(data);
-
-                    if (FutureGames != null && FutureGames.Count > 0)
-                    {
+                   // if (FutureGames != null && FutureGames.Count > 0)
 
                         try
                         {
@@ -81,17 +79,22 @@ namespace WindowsFormsApp7
                         }
 
 
-                        foreach (var score2 in FutureGames)
+
+                        //foreach (var score2 in FutureGames)
+                        try
                         {
 
 
                             SQLiteCommand sqlite_cmd;
                             sqlite_cmd = sqlite_conn.CreateCommand();
                             //  sqlite_cmd.CommandText = "INSERT INTO Games (id, home_name, away_name, score,time,league_id,status)";
-                            sqlite_cmd.CommandText = "INSERT INTO FutureGames (name, id, home_id,home_name, id2,location,group_id,date,away_id,league_id,competition_id,time,away_name) " +
-                                " VALUES(@name, @id, @home_id, @home_name, @id2, @location, @group_id, @date, @away_id, @league_id, @competition_id, @time, @away_name)";
-
-
+                            sqlite_cmd.CommandText = "INSERT INTO FutureGames (id, home_name, away_name, time) " +
+                               "VALUES(@id, @home_team, @away_team, @time)";
+                            sqlite_cmd.Parameters.AddWithValue("@id", IDOfEvent);
+                            sqlite_cmd.Parameters.AddWithValue("@home_team", HTeamOfEvent);
+                            sqlite_cmd.Parameters.AddWithValue("@away_team", ATeamOfEvent);
+                            sqlite_cmd.Parameters.AddWithValue("@time", TimeOfEvent);
+                            /*
                             sqlite_cmd.Parameters.AddWithValue("@name", score2.name);
                             sqlite_cmd.Parameters.AddWithValue("@id", score2.id);
                             sqlite_cmd.Parameters.AddWithValue("@home_id", score2.home_id);
@@ -101,14 +104,18 @@ namespace WindowsFormsApp7
                             sqlite_cmd.Parameters.AddWithValue("@group_id", score2.group_id);
                             sqlite_cmd.Parameters.AddWithValue("@date", score2.date);
                             sqlite_cmd.Parameters.AddWithValue("@away_id", score2.away_id);
-                            sqlite_cmd.Parameters.AddWithValue("@league_id", score2.league_id);
-                            sqlite_cmd.Parameters.AddWithValue("@competition_id", score2.competition_id);
+                           sqlite_cmd.Parameters.AddWithValue("@league_id", score2.league_id);
+                           sqlite_cmd.Parameters.AddWithValue("@competition_id", score2.competition_id);
                             sqlite_cmd.Parameters.AddWithValue("@time", score2.time);
                             sqlite_cmd.Parameters.AddWithValue("@away_name", score2.away_name);
-
+                            */
 
                             sqlite_cmd.ExecuteNonQuery();
+                        }
 
+                        catch (Exception ex)
+                        {
+                            Log.LoggerWriteLine("INSERT DATA ERROR" + ex.Message);
                         }
                     }
                 }

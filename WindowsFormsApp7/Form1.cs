@@ -116,17 +116,17 @@ namespace WindowsFormsApp7
         }
         public class futureGames
         {
-            public string name { get; set; }
+       //     public string name { get; set; }
             public int id { get; set; }
-            public int home_id { get; set; }
+        //    public int home_id { get; set; }
             public string home_name { get; set; }
-            public int id2 { get; set; }
-            public string location { get; set; }
-            public int group_id { get; set; }
-            public string date { get; set; }
-            public int away_id { get; set; }
-            public int league_id { get; set; }
-            public int competition_id { get; set; }
+       //     public int id2 { get; set; }
+      //      public string location { get; set; }
+      //      public int group_id { get; set; }
+      //      public string date { get; set; }
+      //      public int away_id { get; set; }
+     //       public int league_id { get; set; }
+    //        public int competition_id { get; set; }
             public string time { get; set; }
             public string away_name { get; set; }
 
