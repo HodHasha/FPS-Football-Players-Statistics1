@@ -21,7 +21,7 @@ namespace WindowsFormsApp7
         {
             string data = "";
 
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=C:\\sqlite\\db\\Games.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
             var FutureGames = new List<futureGames>();
             var Matches = new List<match>();
             var Events = new List<Event>();
