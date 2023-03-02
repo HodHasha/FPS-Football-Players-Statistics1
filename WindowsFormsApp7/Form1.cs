@@ -26,114 +26,161 @@ namespace WindowsFormsApp7
 {
     public partial class Form1 : Form
     {
+
         private System.Timers.Timer timer;
+
         //Logger Log = new Logger(ConfigurationManager.AppSettings["LoggerFilePath"]);
         Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
         FIFA_API Fifa = new FIFA_API();
         //Yaniv
         public Form1()
         {
+
             InitializeComponent();
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
             timer = new System.Timers.Timer();
             timer.Interval = 60000;
-            timer.Elapsed += Timer_Elapsed1Minute;
-            timer.Start();
-
-            timer = new System.Timers.Timer
-            {
-            //    Interval = 86400000
-               Interval = 5000
-
-            };
             timer.Elapsed += Timer_Elapsed1Day;
-            timer.Start();
+            timer.Start(); 
 
-            void Timer_Elapsed1Minute(object sender1, System.Timers.ElapsedEventArgs e1)
-            {
-                timer.Stop();
-
-                Fifa.GetLiveScore(27, 1581068);
-                Fifa.GetEvents(398130);
-
-                timer.Start();
-            }
             void Timer_Elapsed1Day(object sender1, System.Timers.ElapsedEventArgs e1)
             {
                 timer.Stop();
-
                 if (cbRMA.Checked == true)
                 {
+                    //Thread t = new Thread(() => 
                     Fifa.GetMatchOfTheDay(27);
+                    Log.LoggerWriteLine("in Real Madrid");
+
+                    //  t.Start();
+                    // timer.Start();
                 }
-
-
                 if (cbManCity.Checked == true)
                 {
+                  //  Thread t = new Thread(() =>
                     Fifa.GetMatchOfTheDay(12);
+                    Log.LoggerWriteLine("in Man City");
+
+                    //  t.Start();
                 }
-               
-                    if (cbPSG.Checked == true)
-                    {
-                        Fifa.GetMatchOfTheDay(59);
-                    }
-                    timer.Start();
+                if (cbPSG.Checked == true)
+                {
+                   // Thread t = new Thread(() =>
+                    Fifa.GetMatchOfTheDay(59);
+                    Log.LoggerWriteLine("in PSG");
+
+                    //  t.Start();
+                }
+                timer.Start();
+
             }
 
+            while (true)
+            {
+                Thread threaMatchTime = new Thread(Fifa.MatchTime);
+                threaMatchTime.Start();
+              //  Thread.Sleep(TimeSpan.FromHours(1));
+                Thread.Sleep(120000);
+                Log.LoggerWriteLine("in MatchTime");
+
+
+
+            }
+
+            /*
+            if (cbRMA.Checked == true)
+                {
+                    Thread t = new Thread(() => Fifa.GetMatchOfTheDay(27));
+                    t.Start();
+               //  Thread.Sleep(TimeSpan.FromDays(1));
+                Thread.Sleep(90000);
+
+
+
+            }
+
+            if (cbManCity.Checked == true)
+                {
+                    Thread t = new Thread(() => Fifa.GetMatchOfTheDay(12));
+                    t.Start();
+                 // Thread.Sleep(TimeSpan.FromDays(1));
+                Thread.Sleep(90000);
+
+
+
+            }
+            if (cbPSG.Checked == true)
+                {
+                    Thread t = new Thread(() => Fifa.GetMatchOfTheDay(59));
+                    t.Start();
+                 // Thread.Sleep(TimeSpan.FromDays(1));
+                Thread.Sleep(90000);
+
+
+
+            }
+            // Thread.Sleep(TimeSpan.FromHours(1));
+           // Thread.Sleep(40000);
+                //  Thread.Sleep(TimeSpan.FromDays(1));
+               // Thread.Sleep(90000);
+            */
+
+
+
         }
-        
+    }
+    public class match
+    {
+        public string id { get; set; }
+        public string home_name { get; set; }
+        public string away_name { get; set; }
+        public string score { get; set; }
+        public string time { get; set; }
+        public string league_id { get; set; }
+        public string status { get; set; }
+    }
+
+    public class Event
+
+    {
+
+        public string id { get; set; }
+
+        public string match_id { get; set; }
+        public string player { get; set; }
+        public string time { get; set; }
+        public string event1 { get; set; }
+        public string sort { get; set; }
+        public string home_away { get; set; }
+
+
+
+    }
+    public class futureGames
+    {
+        //     public string name { get; set; }
+        public int id { get; set; }
+        //    public int home_id { get; set; }
+        public string home_name { get; set; }
+        //     public int id2 { get; set; }
+        //      public string location { get; set; }
+        //      public int group_id { get; set; }
+        //      public string date { get; set; }
+        //      public int away_id { get; set; }
+        //       public int league_id { get; set; }
+        //        public int competition_id { get; set; }
+        public string time { get; set; }
+        public string away_name { get; set; }
+
+
+
+
     }
 }
-        public class match
-        {
-            public string id { get; set; }
-            public string home_name { get; set; }
-            public string away_name { get; set; }
-            public string score { get; set; }
-            public string time { get; set; }
-            public string league_id { get; set; }
-            public string status { get; set; }
-        }
-
-        public class Event
-
-        {
-
-            public string id { get; set; }
-
-            public string match_id { get; set; }
-            public string player { get; set; }
-            public string time { get; set; }
-            public string event1 { get; set; }
-            public string sort { get; set; }
-            public string home_away { get; set; }
-
-
-
-        }
-        public class futureGames
-        {
-       //     public string name { get; set; }
-            public int id { get; set; }
-        //    public int home_id { get; set; }
-            public string home_name { get; set; }
-       //     public int id2 { get; set; }
-      //      public string location { get; set; }
-      //      public int group_id { get; set; }
-      //      public string date { get; set; }
-      //      public int away_id { get; set; }
-     //       public int league_id { get; set; }
-    //        public int competition_id { get; set; }
-            public string time { get; set; }
-            public string away_name { get; set; }
-
-
-
-
-        }
 
     
 

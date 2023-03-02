@@ -8,16 +8,54 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WindowsFormsApp7
 {
 
-    public class FIFA_API 
+    public class FIFA_API
     {
         Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
+        
+        public void MatchTime()
+        {
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
+            sqlite_conn.Open();
 
-        public string GetMatchOfTheDay( int team_id)
+            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT time FROM FutureGames";
+
+            SQLiteDataReader reader = sqlite_cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int currentHour = DateTime.Now.Hour;
+
+                int dbHour = Convert.ToDateTime(reader["time"]).Hour;
+
+
+                if (dbHour == 20)
+                {
+                    while (dbHour == 20)
+                    {
+                        Thread t = new Thread(() => GetEvents(400695));
+                        t.Start();
+                        Thread.Sleep(TimeSpan.FromMinutes(1));
+                        Log.LoggerWriteLine("in Events");
+
+
+                    }
+
+                }
+
+
+            }
+            reader.Close();
+            sqlite_conn.Close();
+        }
+        
+        public void GetMatchOfTheDay( int team_id)
         {
             string data = "";
 
@@ -33,7 +71,7 @@ namespace WindowsFormsApp7
                 {
                     string Query = "https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8";
 
-                    Query += "&date=2023-03-02&team=";
+                    Query += "&date=today&team=";
                     Query += team_id;
 
                     data = client.DownloadString(Query);
@@ -128,7 +166,6 @@ namespace WindowsFormsApp7
             
             }
 
-            return data;
         }
 
         public string GetLiveScore(int team_id, int fixture_id)
@@ -203,7 +240,7 @@ namespace WindowsFormsApp7
             return data;
         }
 
-        public string GetEvents(int match_id)
+        public void GetEvents (int match_id)
         {
             var Events = new List<Event>();
             SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=C:\\sqlite\\db\\Games.db");
@@ -264,7 +301,6 @@ namespace WindowsFormsApp7
                     Log.LoggerWriteLine("Web client Error: " + ex.Message);
                 }
             }
-            return data;
         }
     }
 }
