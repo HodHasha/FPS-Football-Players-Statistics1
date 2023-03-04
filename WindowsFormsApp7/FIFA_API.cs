@@ -35,9 +35,11 @@ namespace WindowsFormsApp7
                 int dbHour = Convert.ToDateTime(reader["time"]).Hour;
 
 
-                if (dbHour == 20)
-                {
-                    while (dbHour == 20)
+                if (dbHour == currentHour || dbHour == currentHour + 1)
+                  //  if (dbHour == 20)
+                    {
+                    while (dbHour == currentHour || dbHour == currentHour + 1)
+                  //  while (dbHour == 20)
                     {
                         Thread t = new Thread(() => GetEvents(400695));
                         t.Start();
