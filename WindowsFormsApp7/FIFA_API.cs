@@ -35,16 +35,23 @@ namespace WindowsFormsApp7
                 int dbHour = Convert.ToDateTime(reader["time"]).Hour;
 
 
-                if (dbHour == currentHour || dbHour == currentHour + 1)
-                  //  if (dbHour == 20)
+              //  if (dbHour == currentHour || dbHour == currentHour + 1 || dbHour == currentHour + 2)
+                   if (dbHour == 20)
                     {
-                    while (dbHour == currentHour || dbHour == currentHour + 1)
-                  //  while (dbHour == 20)
+                    // while (dbHour == currentHour || dbHour == currentHour + 1 || dbHour == currentHour + 2)
+                    while (dbHour == 20)
                     {
                         Thread t = new Thread(() => GetEvents(400695));
                         t.Start();
                         Thread.Sleep(TimeSpan.FromMinutes(1));
                         Log.LoggerWriteLine("in Events");
+
+                       Thread t1 = new Thread(() => GetLiveScore(27, 1538564));
+                       t1.Start();
+                       Thread.Sleep(TimeSpan.FromHours(3));
+
+                        
+
 
 
                     }
@@ -71,9 +78,9 @@ namespace WindowsFormsApp7
             {
                 try
                 {
-                    string Query = "https://livescore-api.com/api-client/fixtures/matches.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8";
+                    string Query = "https://livescore-api.com/api-client/fixtures/matches.json?&key=IekFVXyGB1mAEcYu&secret=MG2LJNxkISo9E2Nng82c6BSICfihshLe";
 
-                    Query += "&date=today&team=";
+                    Query += "&date=2023-03-11&team=";
                     Query += team_id;
 
                     data = client.DownloadString(Query);
@@ -180,7 +187,7 @@ namespace WindowsFormsApp7
             {
                 try
                 {
-                    string Query = "https://livescore-api.com/api-client/scores/live.json?&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8";
+                    string Query = "https://livescore-api.com/api-client/scores/live.json?&key=IekFVXyGB1mAEcYu&secret=MG2LJNxkISo9E2Nng82c6BSICfihshLe";
                     Query += "&team=";
                     Query += team_id;
                     Query += "&fixture_id=";
@@ -252,7 +259,7 @@ namespace WindowsFormsApp7
                 try
                 {
 
-                    string Query = "https://livescore-api.com/api-client/scores/events.json?id=129180&key=giaWgvAYttMkd87a&secret=lBPDU7wsSB0z0kLgCVcTqNSUgEeuMmE8&id=";
+                    string Query = "https://livescore-api.com/api-client/scores/events.json?&key=IekFVXyGB1mAEcYu&secret=MG2LJNxkISo9E2Nng82c6BSICfihshLe&id=";
                     Query += match_id;
                     data = client.DownloadString(Query);
                     Events = JsonSerializer.Deserialize<List<Event>>(data);
