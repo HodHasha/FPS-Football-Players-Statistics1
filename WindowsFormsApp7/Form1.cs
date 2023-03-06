@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,7 +46,18 @@ namespace WindowsFormsApp7
             timer = new System.Timers.Timer();
             timer.Interval = 60000;
             timer.Elapsed += Timer_Elapsed1Day;
-            timer.Start(); 
+            timer.Start();
+
+
+            Fifa.GetMatchHistory(27, "2023-03-01", "2023-03-06");
+
+            Fifa.GetEvents(398130);
+
+            
+
+
+
+
 
             void Timer_Elapsed1Day(object sender1, System.Timers.ElapsedEventArgs e1)
             {
@@ -143,6 +155,39 @@ namespace WindowsFormsApp7
         public string league_id { get; set; }
         public string status { get; set; }
     }
+    public class matchhistory
+    {
+        public string id { get; set; }
+        public string date { get; set; }
+        public string home_name { get; set; }
+        public string away_name { get; set; }
+        public string score { get; set; }
+        public string ht_score { get; set; }
+        public string ft_score { get; set; }
+        public string et_score { get; set; }
+        public string time { get; set; }
+        public string league_id { get; set; }
+        public string status { get; set; }
+        public string added { get; set; }
+        public string last_changed { get; set; }
+        public string home_id { get; set; }
+        public string away_id { get; set; }
+        public string competition_id { get; set; }
+        public string competition_name { get; set; }
+        public string location { get; set; }
+        public string fixture_id { get; set; }
+        public string scheduled { get; set; }
+
+
+
+
+
+
+
+
+
+
+    }
 
     public class Event
 
@@ -153,6 +198,7 @@ namespace WindowsFormsApp7
         public string match_id { get; set; }
         public string player { get; set; }
         public string time { get; set; }
+        [JsonPropertyName("event")]
         public string event1 { get; set; }
         public string sort { get; set; }
         public string home_away { get; set; }
