@@ -42,22 +42,23 @@ namespace WindowsFormsApp7
 
 
         private void button1_Click(object sender, EventArgs e)
-        {
+        {/*
             timer = new System.Timers.Timer();
             timer.Interval = 60000;
-            timer.Elapsed += Timer_Elapsed1Day;
+          //  timer.Elapsed += Timer_Elapsed1Day;
             timer.Start();
+            */
+            Fifa.EventsHistory();
+            
+         //  Fifa.GetMatchHistory(59, "2023-02-14", "2023-11-15");
 
-
-            Fifa.GetMatchHistory(27, "2023-03-01", "2023-03-06");
-
-            Fifa.GetEvents(398130);
+           // Fifa.GetEvents(398130);
 
             
+            
 
-
-
-
+            
+            /*
 
             void Timer_Elapsed1Day(object sender1, System.Timers.ElapsedEventArgs e1)
             {
@@ -140,7 +141,7 @@ namespace WindowsFormsApp7
                 //  Thread.Sleep(TimeSpan.FromDays(1));
                // Thread.Sleep(90000);
             */
-
+            
 
 
         }
@@ -157,7 +158,7 @@ namespace WindowsFormsApp7
     }
     public class matchhistory
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string date { get; set; }
         public string home_name { get; set; }
         public string away_name { get; set; }
@@ -166,17 +167,18 @@ namespace WindowsFormsApp7
         public string ft_score { get; set; }
         public string et_score { get; set; }
         public string time { get; set; }
-        public string league_id { get; set; }
+        public int league_id { get; set; }
         public string status { get; set; }
         public string added { get; set; }
         public string last_changed { get; set; }
-        public string home_id { get; set; }
-        public string away_id { get; set; }
-        public string competition_id { get; set; }
+        public int home_id { get; set; }
+        public int away_id { get; set; }
+        public int competition_id { get; set; }
         public string competition_name { get; set; }
-        public string location { get; set; }
-        public string fixture_id { get; set; }
+        public int fixture_id { get; set; }
         public string scheduled { get; set; }
+        public string location { get; set; }
+
 
 
 
