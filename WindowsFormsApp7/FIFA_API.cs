@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -17,37 +18,70 @@ namespace WindowsFormsApp7
     public class FIFA_API
     {
         Logger Log = new Logger("C:\\sqlite\\Logger_File.txt");
-        
+
         public void EventsHistory()
         {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
-            sqlite_conn.Open();
 
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\sqlite\\Games.db");
             SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT id FROM GamesHistory WHERE home_name = 'Manchester City' OR away_name = 'Manchester City';";
+            try
+            {
+                sqlite_conn.Open();
+                Log.LoggerWriteLine(" db open ");
+                if (sqlite_conn == null)
+                {
+                    Log.LoggerWriteLine($"ERROR no connection to DB ");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LoggerWriteLine($"ERROR no connection to DB " + ex.Message);
+            }
+
+            //  sqlite_cmd.CommandText = "SELECT id FROM GamesHistory WHERE home_name = 'Manchester City' OR away_name = 'Manchester City';";
+             sqlite_cmd.CommandText = "SELECT id FROM GamesHistory";
 
             SQLiteDataReader reader = sqlite_cmd.ExecuteReader();
-
 
             while (reader.Read())
                 try
                 {
 
-                    lock (sqlite_conn)
+
+                    int match_Id = Convert.ToInt32(reader["id"]);
+
+
+                    string query = "SELECT COUNT(*) FROM Players WHERE match_id = @matchIdToCheck";
+                        SQLiteCommand command = new SQLiteCommand(query, sqlite_conn);
+                        command.Parameters.AddWithValue("@matchIdToCheck", match_Id);
+
+                        // Execute the query and get the count of rows returned
+                        int rowCount = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Check if the count of rows is greater than 0, meaning the match id already exists in the Players table
+                        if (rowCount > 0)
+                        {
+                        // The match id already exists in the Players table, so don't run the EventsHistory method
+                        continue;
+
+                    }
+
+                    // The match id does not exist in the Players table, so you can run the EventsHistory method
+                    // ...
 
 
                     {
-                        int match_Id = Convert.ToInt32(reader["id"]);
 
-                        Thread t = new Thread(() => GetEvents(match_Id));
-                        t.Start();
+                            Thread t = new Thread(() => GetEvents(match_Id));
+                            t.Start();
 
-                    }
-                   
+                        }
+
+                    
                 }
                 catch (Exception ex)
                 {
-
+                    Log.LoggerWriteLine($"ERROR no connection to DB " + ex.Message);
                 }
             reader.Close();
             sqlite_conn.Close();
